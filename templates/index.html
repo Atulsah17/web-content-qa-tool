@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Content Q&A Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            transition: transform 0.3s ease;
+        }
+        .card:hover { transform: translateY(-5px); }
+        h2 {
+            font-size: 1.5em;
+            color: #34495e;
+            margin-bottom: 15px;
+        }
+        select, textarea, input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+        select:focus, textarea:focus, input:focus {
+            border-color: #16a085;
+            outline: none;
+        }
+        textarea { resize: vertical; min-height: 120px; }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #16a085, #1abc9c);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        button:hover {
+            background: linear-gradient(45deg, #1abc9c, #16a085);
+            transform: scale(1.02);
+        }
+        .response {
+            margin-top: 15px;
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 8px;
+            font-size: 1em;
+            color: #2c3e50;
+            transition: opacity 0.3s ease;
+            line-height: 1.5; /* Better readability for longer text */
+            max-height: 200px; /* Limit height with scroll if needed */
+            overflow-y: auto; /* Scroll for very long answers */
+        }
+        .response.error {
+            background: #fad2d2;
+            color: #c0392b;
+        }
+        .response strong { color: #16a085; }
+        @media (max-width: 600px) {
+            h1 { font-size: 2em; }
+            .card { padding: 20px; }
+            button { font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Web Content Q&A Tool</h1>
+        <div class="card">
+            <h2>Step 1: Enter URLs or Text</h2>
+            <form method="POST">
+                <select name="input_type">
+                    <option value="urls">URLs (one per line)</option>
+                    <option value="text">Raw Text</option>
+                </select>
+                <textarea name="urls_or_text" placeholder="Enter URLs (one per line) or text"></textarea>
+                <button type="submit">Submit</button>
+            </form>
+            {% if message %}
+                <div class="response {% if 'No' in message and 'ingested' in message %}error{% endif %}">
+                    {{ message }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="card">
+            <h2>Step 2: Ask a Question</h2>
+            <form method="POST">
+                <input type="text" name="question" placeholder="Type your question here" />
+                <button type="submit">Ask</button>
+            </form>
+            {% if answer %}
+                <div class="response"><strong>Answer:</strong> {{ answer }}</div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
